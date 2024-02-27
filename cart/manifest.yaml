@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cart
+  namespace: roboshop
+data: 
+  REDIS_HOST: "redis"
+  CATALOGUE_HOST: "catalogue"
+  CATALOGUE_PORT: "8080"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart
+  namespace: roboshop
+  labels:
+     app: cart
+     project: roboshop
+     teir: app
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+        app: cart
+        project: roboshop
+        teir: app
+  template:
+    metadata:
+      labels:
+        app: cart
+        project: roboshop
+        teir: app
+    spec:
+      containers:
+      - name: cart
+        image: awsmouli/cart:v1
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: cart
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cart
+  namespace: roboshop
+spec:
+  selector:
+     app: cart
+     project: roboshop
+     teir: app
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+
+
+        
