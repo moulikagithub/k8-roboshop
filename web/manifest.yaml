@@ -128,7 +128,7 @@ spec:
       tier: web
   template:
     metadata:
-      labels: # these labels are pod labels
+     labels: # these labels are pod labels
         app: web
         project: roboshop
         tier: web
