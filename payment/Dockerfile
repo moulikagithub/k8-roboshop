@@ -1,4 +1,5 @@
 FROM python:3.9.18-alpine3.19
+
 EXPOSE 8080
 USER root
 WORKDIR /app
