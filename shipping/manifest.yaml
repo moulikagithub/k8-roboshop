@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shipping
+  namespace: roboshop
+data: 
+   CART_ENDPOINT: "cart:8080"
+   DB_HOST: mysql
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shipping
+  namespace: roboshop
+  labels:
+     app: shipping
+     project: roboshop
+     teir: app
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+        app: shipping
+        project: roboshop
+        teir: app
+  template:
+    metadata:
+      labels:
+        app: shipping
+        project: roboshop
+        teir: app
+    spec:
+      containers:
+      - name: shipping
+        image: awsmouli/shipping:v1
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: shipping
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shipping
+  namespace: roboshop
+spec:
+  selector:
+     app: shipping
+     project: roboshop
+     teir: app
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+
+
+        
